@@ -5,6 +5,7 @@ mod task3;
 fn main() {
     main_task1();
     main_task2();
+    main_task3();
 }
 
 fn main_task1() {
@@ -24,4 +25,9 @@ fn main_task2() {
     task2::sort::sort(&mut arr);
     println!("{:?}", arr);
 
+}
+
+fn main_task3() {
+    let name = "Hibiskus blüht weiß".to_string();
+    println!("{:?}", task3::string_counter::chars_in_string(&name, 'w'));
 }
