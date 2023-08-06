@@ -1,7 +1,17 @@
 //! Aufgabe 2.1: Primzahltest
 
-fn main() {
-
+pub fn is_prime(num: u32) -> bool {
+    if num < 2 {
+        false
+    }
+    else {
+        for div in 2 .. num {
+            if num % div == 0 {
+                return false
+            }
+        }
+        true
+    }
 }
 
 #[test]

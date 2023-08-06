@@ -1,5 +1,16 @@
 mod task1;
 
 fn main() {
-    println!("Hello, world!");
+    main_task1();
+}
+
+fn main_task1() {
+    for n in 0..21 {
+        if task1::prime::is_prime(n) {
+            println!("{:?}*", n);
+        }
+        else {
+            println!("{:?}", n);
+        }
+    }
 }
