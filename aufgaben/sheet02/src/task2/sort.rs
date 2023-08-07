@@ -1,12 +1,21 @@
-fn main() {
-    let mut arr = [61, 21, 27, 79, 57, 60, 46, 42, 27, 92, 66, 26];
+// fn main() {
+//     let mut arr = [61, 21, 27, 79, 57, 60, 46, 42, 27, 92, 66, 26];
+//
+//     sort(&mut arr);
+// }
 
-    sort(&mut arr);
-    // TODO: print `arr`
+pub fn sort(arr: &mut [u64]) {
+    let mut temp:u64;
+    for i in 0..arr.len() {
+        for j in 0..arr.len() {
+            if arr[i] < arr[j] {
+                temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+    }
 }
-
-// TODO: write `sort()` function
-
 
 #[test]
 fn sort_array() {
