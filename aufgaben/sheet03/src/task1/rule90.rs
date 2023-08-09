@@ -1,5 +1,17 @@
 //! Task 3.1: Rule 90
 
+pub fn main() {
+    let life_cycles = 500000;
+    let mut life_line = read_input();
+    for _ in 0..life_cycles {
+        for &i in &life_line {
+            print!("{}", if i { "██" } else { "  " })
+        }
+        println!();
+        life_line = next_step(&life_line);
+    }
+}
+
 /// Reads a valid initial configuration for our automaton from the terminal.
 pub fn read_input() -> Vec<bool> {
     // This tries to read a string from the terminal, checks whether it's
