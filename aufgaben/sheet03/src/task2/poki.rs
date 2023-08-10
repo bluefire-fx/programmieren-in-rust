@@ -1,8 +1,45 @@
 //! Task 3.2: Pokemon
 
-fn main() {}
+use std::fs::OpenOptions;
 
+pub fn main() {
+    //print_pokemon_list();
+    let p1 = choose_pokemon("Red");
+    let p2 = choose_pokemon("Blue");
+}
 
+fn print_pokemon_list() {
+    for model in POKEDEX {
+        println!("#{:03} {}", model.id, model.name)
+    }
+}
+
+fn find_pokemon_by_name(name: &str) -> Option<PokemonModel> {
+    for model in POKEDEX {
+        if name == model.name {
+            return Some(*model);
+        }
+    }
+    None
+}
+
+fn choose_pokemon(player: &str) -> PokemonModel {
+    loop {
+        println!("Player {} please type a pokemon name (or type ? to list all available for you) ", player);
+        let name = read_string();
+        if &name == "?" {
+            print_pokemon_list();
+            continue;
+        }
+        let model = find_pokemon_by_name(&name);
+        if model.is_some() {
+            return model.unwrap()
+        }
+        else {
+            println!("Pardon, {} is an unknown pokemon name", &name);
+        }
+    }
+}
 
 /// Describes an attack with all its properties. This type is similar to
 /// `PokemonModel`, as there are finite many, immutable instances of this type
@@ -72,7 +109,6 @@ impl TypeEffectiveness {
     }
 }
 
-
 /// Types (sometimes called "elements") of the Pokemon universe. Each
 /// attack-move has exactly one type, Pokemons can have one or two types.
 #[derive(Debug, Clone, Copy)]
@@ -122,7 +158,7 @@ struct PokemonModel {
     /// of the Pokemon model, but of the Pokemon itself (as they change over
     /// time). A pokemon just has an abstract learnset of potential attacks.
     /// But this is easier for now.
-    attacks: &'static [&'static Attack]
+    attacks: &'static [&'static Attack],
 }
 
 /// Describes the basic stats of a Pokemon.
@@ -164,11 +200,7 @@ impl Stats {
             ((base as f64 * level as f64) / 50.0 + 5.0) as u16
         }
 
-        let hp = (
-            (base.hp as f64 * level as f64) / 50.0
-                + level as f64
-                + 10.0
-        ) as u16;
+        let hp = ((base.hp as f64 * level as f64) / 50.0 + level as f64 + 10.0) as u16;
 
         Stats {
             hp: hp,
@@ -409,9 +441,6 @@ const TACKLE: &'static Attack = &ATTACK_DB[0];
 const VINE_WHIP: &'static Attack = &ATTACK_DB[1];
 const EMBER: &'static Attack = &ATTACK_DB[2];
 const WATER_GUN: &'static Attack = &ATTACK_DB[3];
-
-
-
 
 // ===========================================================================
 // ===========================================================================
