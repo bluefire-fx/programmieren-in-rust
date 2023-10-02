@@ -45,25 +45,15 @@ fn check_if_number_is_happy(number: i32) -> bool {
     return true;
 }
 
-// is it priem?
-fn check_if_number_is_prime(n: i32) -> bool {
-    if n == 1 {
-        return false;
+// is it prime?
+fn check_if_number_is_prime(number: i32) -> bool {
+    if number < 3 {
+        return false
     }
-
-    if n == 2 {
-        return false;
-    }
-
-    let mut teilerGefunden:bool = false;
-
-    let mut teiler:i32= 2;
-    while (teiler < n) {
-        if (n % teiler == 0) {
-            teilerGefunden = true;
+    for divider in 2..number {
+        if number % divider == 0 {
+            return false
         }
-        teiler = teiler + 1;
     }
-
-    return !teilerGefunden;
+    return true
 }
