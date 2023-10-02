@@ -1,13 +1,10 @@
 // print if they are both
 pub fn main() -> () {
-    for iterationnumber in &[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20] {
-        let iterationnumber = *iterationnumber;
-        if !happy_prime(iterationnumber) {} else {
-            print!("{}", iterationnumber);
-            println!(" is a happy prime!");
+    for number in 1..21 {
+        if happy_prime(number) {
+            println!("{} is a happy prime!", number);
         }
     }
-
 }
 
 // is it botH?
