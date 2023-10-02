@@ -12,16 +12,7 @@ pub fn main() -> () {
 
 // is it botH?
 fn happy_prime(n: i32) -> bool {
-    match check_if_number_is_happy(n) {
-        false => return false,
-        _ => {}
-    }
-
-    if check_if_number_is_prime(n) == true {
-        return true;
-    } else {
-        return false;
-    }
+    check_if_number_is_happy(n) && check_if_number_is_prime(n)
 }
 
 // Is it a happy number? https://en.wikipedia.org/wiki/Happy_number
