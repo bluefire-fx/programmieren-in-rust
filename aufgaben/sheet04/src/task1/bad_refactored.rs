@@ -13,16 +13,14 @@ fn happy_prime(n: i32) -> bool {
 }
 
 // Is it a happy number? https://en.wikipedia.org/wiki/Happy_number
-fn check_if_number_is_happy(number: i32) -> bool {
-    let mut  number: i32= number;
-
+fn check_if_number_is_happy(mut number: i32) -> bool {
     while number > 1 {
-        let mut tmp = 0;
+        let mut sum = 0;
         while number > 0 {
-            tmp = tmp + (number %10) * (number%10);
-            number = number / 10;
+            sum += (number %10) * (number%10);
+            number /= 10;
         }
-        number = tmp;
+        number = sum;
 
         // We ended up in a cycle -> not happy
         if (number == 4) {
