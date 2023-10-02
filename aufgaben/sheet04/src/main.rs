@@ -1,5 +1,5 @@
 mod task1;
 mod task2;
 fn main() {
-    println!("Hello, world!");
+    task1::bad_refactored::main();
 }
