@@ -8,12 +8,12 @@ pub fn main() -> () {
 }
 
 // is it botH?
-fn happy_prime(n: i32) -> bool {
+fn happy_prime(n: u32) -> bool {
     check_if_number_is_happy(n) && check_if_number_is_prime(n)
 }
 
 // Is it a happy number? https://en.wikipedia.org/wiki/Happy_number
-fn check_if_number_is_happy(mut number: i32) -> bool {
+fn check_if_number_is_happy(mut number: u32) -> bool {
     while number > 1 {
         let mut sum = 0;
         while number > 0 {
@@ -23,7 +23,7 @@ fn check_if_number_is_happy(mut number: i32) -> bool {
         number = sum;
 
         // We ended up in a cycle -> not happy
-        if (number == 4) {
+        if number == 4 {
             return false;
         }
     }
@@ -32,7 +32,7 @@ fn check_if_number_is_happy(mut number: i32) -> bool {
 }
 
 // is it prime?
-fn check_if_number_is_prime(number: i32) -> bool {
+fn check_if_number_is_prime(number: u32) -> bool {
     if number < 3 {
         return false
     }
