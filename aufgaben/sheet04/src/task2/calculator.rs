@@ -1,4 +1,11 @@
 pub fn main() {
+    let e = Expr::new_example();
+
+    println!("{:#?}", e);
+    println!("{:#?}", e.evaluate());
+    println!("{:#?}", e.parse(&tokenize("1 + 2 / 3").unwrap()));
+
+    return;
     loop {
         // Read input from the user and just do nothing when the input is empty
         let input = read_string();
@@ -10,9 +17,9 @@ pub fn main() {
         println!("\n{}\n", input);
 
         // tokenize output
-        let mut foo = tokenize(&input);
+        let foo = tokenize(&input);
         for bar in foo {
-            println!("{:?}",bar)
+            println!("{:?}", bar)
         }
     }
 }
@@ -133,6 +140,103 @@ enum Op {
 #[derive(Debug)]
 enum LexErr {
     Unknown,
+}
+
+impl Op {
+    fn apply(&self, left: f64, right: f64) -> Option<f64> {
+        let result = match *self {
+            Self::Addition => left + right,
+            Self::Subtraction => left - right,
+            Self::Multiplication => left * right,
+            Self::Division => {
+                if right == 0.0 {
+                    f64::NAN
+                } else {
+                    left / right
+                }
+            }
+        };
+        if result.is_infinite() || result.is_nan() || result.is_subnormal() {
+            return None
+        }
+        Some(result)
+    }
+}
+
+#[derive(Debug)]
+enum Expr {
+    Leaf(f64),
+    Branch {
+        op: Op,
+        children: Vec<Expr>,
+    },
+}
+
+impl Expr {
+    fn evaluate(&self) -> Option<f64> {
+        match *self {
+            Self::Leaf(data) => Some(data),
+            Self::Branch { ref op, ref children } => {
+                let mut children_iter = children.iter();
+                let mut data = match children_iter.next() {
+                    Some(expr) => match expr.evaluate() {
+                        Some(res) => res,
+                        None => return None,
+                    },
+                    None => return None,
+                };
+                while let Some(next) = children_iter.next() {
+                    let next_evaluated = match next.evaluate() {
+                        Some(x) => x,
+                        None => return None,
+                    };
+                    data = match op.apply(data, next_evaluated) {
+                        Some(res) => res,
+                        None => return None,
+                    };
+                }
+                Some(data)
+            }
+        }
+    }
+    fn new_example() -> Self {
+        Self::Branch {
+            op: Op::Addition,
+            children: vec![
+                Self::Leaf(3.0),
+                Self::Branch {
+                    op: Op::Subtraction,
+                    children: vec![
+                        Self::Leaf(6.0),
+                        Self::Leaf(1.0),
+                    ],
+                },
+            ],
+        }
+    }
+    fn new_example_2() -> Self {
+        Self::Branch {
+            op: Op::Addition,
+            children: vec![
+                Self::Leaf(10.0),
+                Self::Branch {
+                    op: Op::Division,
+                    children: vec![
+                        Self::Leaf(6.0),
+                        Self::Branch {
+                            op: Op::Multiplication,
+                            children: vec![
+                                Self::Leaf(0.1),
+                                Self::Leaf(20.0),
+                                Self::Leaf(0.5),
+                            ],
+                        },
+                        Self::Leaf(3.0),
+                    ],
+                },
+            ],
+        }
+    }
 }
 
 /// Reads a string from the user (with a nice prompt).
