@@ -53,7 +53,7 @@ fn tokenize(s: &str) -> Result<Vec<Token>, LexErr> {
                                         _Err => return Err(LexErr::Unknown),
                                     }
                                 }
-                                '0'..='9' | '.' | ',' => number_buffer.push(y),
+                                '0'..='9' | '.'  => number_buffer.push(y),
                                 _ => return Err(LexErr::Unknown),
                             }
                             None => {
@@ -87,56 +87,50 @@ fn tokenize(s: &str) -> Result<Vec<Token>, LexErr> {
 
 #[derive(Debug)]
 enum Token {
-    Number(String),
-    Operator(MathOperation),
+    Number(f64),
     OpenParentheses,
     CloseParentheses,
-}
-
-impl Token {
-    fn with_char(input: char) -> Result<Self, String> {
-        match input {
-            '+' => Ok(Token::Operator(MathOperation::Addition)),
-            '-' => Ok(Token::Operator(MathOperation::Subtraction)),
-            '*' => Ok(Token::Operator(MathOperation::Multiplication)),
-            '/' => Ok(Token::Operator(MathOperation::Division)),
-            '(' => Ok(Token::OpenParentheses),
-            ')' => Ok(Token::CloseParentheses),
-            _ => Err(format!("Cannot create token from char: {}", input)),
-        }
-    }
-    fn with_number(input: &str) -> Result<Token, String> {
-        return if valid(input) {
-            Ok(Token::Number(String::from(input)))
-        } else {
-            Err(format!("Cannot create token from string: {}", input))
-        };
-
-        fn valid(input: &str) -> bool {
-            let mut decimal_separator_counter = 0;
-            for item in input.chars() {
-                if decimal_separator_counter > 1 {
-                    return false;
-                }
-                match item {
-                    '0'..='9' => {},
-                    '.' | ',' => decimal_separator_counter += 1,
-                    _ => return false,
-                }
-            }
-            true
-        }
-    }
-}
-
-#[derive(Debug)]
-enum MathOperation {
     Addition,
     Subtraction,
     Multiplication,
     Division,
 }
 
+impl Token {
+    fn with_char(input: char) -> Result<Self, TokenParseError> {
+        match input {
+            '+' => Ok(Self::Addition),
+            '-' => Ok(Self::Subtraction),
+            '*' => Ok(Self::Multiplication),
+            '/' => Ok(Self::Division),
+            '(' => Ok(Self::OpenParentheses),
+            ')' => Ok(Self::CloseParentheses),
+            _ => Err(TokenParseError::UnknownChar(input)),
+        }
+    }
+    fn with_number(input: &str) -> Result<Self, TokenParseError> {
+        match input.parse() {
+            Ok(success) => Ok(Self::Number(success)),
+            Err(_) => Err(TokenParseError::InvalidNumberString(String::from(input))),
+        }
+    }
+}
+
+#[derive(Debug)]
+enum TokenParseError {
+    UnknownChar(char),
+    InvalidNumberString(String),
+}
+
+#[derive(Debug)]
+enum Op {
+    Addition,
+    Subtraction,
+    Multiplication,
+    Division,
+}
+
+#[derive(Debug)]
 enum LexErr {
     Unknown,
 }
